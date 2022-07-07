@@ -3,14 +3,14 @@ const app = express()
 const port = 3000
 const bodyparser = require('body-parser');
 const { User } = require("./models/User");
-
+const config = require("./config/key");
 
 app.use(bodyparser.urlencoded({extended: true}));
 app.use(bodyparser.json());
 
 const mongoose = require('mongoose')
 
-mongoose.connect('mongodb+srv://jwdo3015:wjdckdduq149!%40@boilerplate.unkzso9.mongodb.net/?retryWrites=true&w=majority'
+mongoose.connect(config.mongoURI
 ).then(() => console.log("MongoDB Connected....")).catch(err=>console.log(err))
 
 app.get('/', (req, res)=>res.send("Hellow World"))
