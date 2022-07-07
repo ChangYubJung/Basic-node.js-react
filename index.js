@@ -18,6 +18,7 @@ app.get('/', (req, res)=>res.send("Hellow World"))
 app.post('/register', (req, res) => {
   //회원가입할때 필요한 정보들을 client에서 가져와서 데이터베이스에 넣어준다.
   const user = new User(req.body) // req의 body 안에는 json 형태로 data가 들어있다. -> body-parser가 있어서 가능함.
+  
   user.save((err, userInfo) => {
     if(err) return res.json({ success: false, err })
     return res.status(200).json({

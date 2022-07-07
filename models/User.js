@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const { stringify } = require('qs');
+const bcrypt= require('bcrypt');
+const saltRounds = 10 // salt 자리값 지정.
 
 const userSchema = mongoose.Schema({
     name: {
@@ -31,6 +33,27 @@ const userSchema = mongoose.Schema({
         type: Number
     }
 
+})
+
+userSchema.pre('save', function( next ){
+    var user = this; // -> 위에 생성된 schema를 가리킴!
+    // pasword 항목의 변화가 있을때만 비밀번호를 다시 암호화!
+    //이 부분이 없으면 name, email등 변화가 있을때마다 암호화.
+    if(user.isModified('password')) //isModified -> MongoDB에 포함된 메서드
+    //password 변화가 있으면 true, 없으면 flse
+    {
+        //db에 저장하기 전 비밀번호 암호화
+        // salt생성 -> salt 만들때 saltRounds가 필요함
+        bcrypt.genSalt(saltRounds, function(err, salt) {
+            if(err) return next(err)
+    
+            bcrypt.hash(user.password, salt, function(err, hash){ // 첫번째 인자 = 사용자가 지정한 암호화 안됨 오리지널 비밀번호를 지칭.
+                if(err) return next(err)
+                user.password = hash // hash된 즉 암호화된  password로 값 변경.
+                next()
+            })
+        })
+    }
 })
 
 const User = mongoose.model('User', userSchema) // Schema는 모델로 감싸준다! User -> 모델, userSchema -> Schema
