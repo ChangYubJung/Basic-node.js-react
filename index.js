@@ -2,7 +2,8 @@ const express = require('express')
 const app = express()
 const port = 3000
 const bodyparser = require('body-parser');
-const { User } = requrie("./models/User");
+const { User } = require("./models/User");
+
 
 app.use(bodyparser.urlencoded({extended: true}));
 app.use(bodyparser.json());
