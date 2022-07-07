@@ -1,9 +1,12 @@
 const mongoose = require('mongoose');
 const { stringify } = require('qs');
 const bcrypt= require('bcrypt');
+
 const saltRounds = 10 // salt 자리값 지정.
 
+const jwt = require('jsonwebtoken');
 const userSchema = mongoose.Schema({
+
     name: {
         type: String,
         maxlength: 50
@@ -53,9 +56,30 @@ userSchema.pre('save', function( next ){
                 next()
             })
         })
+    } else {
+        next()
     }
 })
 
+userSchema.methods.comparePassword = function(plainPassword, cb){
+    bcrypt.compare(plainPassword, this.password, function(err, isMatch) {
+        console.log("heelo2");
+        if(err) return cb(err);
+        cb(null, isMatch)
+    })
+    console.log("heelo3");
+}
+
+userSchema.methods.generateToken = function(cb) {
+    var user = this;
+    var token = jwt.sign(user._id.toHexString(), 'secretToken') // _id는 데이터베이스에 있음.
+
+    user.token = token
+    user.save(function(err, user){
+        if(err) return cb(err);
+            cb(null, user)
+    })
+}
 const User = mongoose.model('User', userSchema) // Schema는 모델로 감싸준다! User -> 모델, userSchema -> Schema
 
 module.exports = {User} // 다른 파일에서도 사용할수 있게 export 한다.
