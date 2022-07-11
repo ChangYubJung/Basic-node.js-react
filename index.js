@@ -17,7 +17,7 @@ const mongoose = require('mongoose')
 mongoose.connect(config.mongoURI
 ).then(() => console.log("MongoDB Connected....")).catch(err => console.log(err))
 
-app.get('/', (req, res) => res.send("Hellow World"))
+app.get('/', (req, res) => res.send("Hellow World123123"))
 
 app.post('/api/users/register', (req, res) => {
   //회원가입할때 필요한 정보들을 client에서 가져와서 데이터베이스에 넣어준다.
