@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = 3000
+const port = 5000
 const bodyparser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { User } = require("./models/User");
@@ -12,12 +12,17 @@ app.use(bodyparser.urlencoded({ extended: true }));
 app.use(bodyparser.json());
 app.use(cookieParser());
 
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+//const { application } = require('express');
 
 mongoose.connect(config.mongoURI
 ).then(() => console.log("MongoDB Connected....")).catch(err => console.log(err))
 
 app.get('/', (req, res) => res.send("Hellow World123123"))
+
+app.get('/api/hello', (req, res) => {
+  res.send("방가방가")
+})
 
 app.post('/api/users/register', (req, res) => {
   //회원가입할때 필요한 정보들을 client에서 가져와서 데이터베이스에 넣어준다.
